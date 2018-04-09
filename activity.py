@@ -1,25 +1,25 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#Copyright (c) 2013, Playful Invention Company.
+# Copyright (c) 2013, Playful Invention Company.
 
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#THE SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 
 # -----
 
@@ -35,26 +35,17 @@
 
 
 from gi.repository import Gtk
-import logging
 import os
-
-from gettext import gettext as _
 
 from sugar3.activity import activity
 from sugar3.graphics.toolbarbox import ToolbarBox
-from sugar3.graphics.toolbutton import ToolButton
 from sugar3.activity.widgets import ActivityButton
 from sugar3.activity.widgets import TitleEntry
 from sugar3.activity.widgets import StopButton
 from sugar3.activity.widgets import ShareButton
 from sugar3.activity.widgets import DescriptionItem
-from sugar3.presence import presenceservice
 
 from gi.repository import WebKit
-import logging
-import gconf
-
-from datetime import date
 
 from enyo import Enyo
 
@@ -73,10 +64,8 @@ class GridpaintActivity(activity.Activity):
 
         self.context = None
 
-
     def init_context(self, args):
         self.enyo.send_message("load-gallery", self.context)
-
 
     def make_mainview(self):
         """Create the activity view"""
@@ -85,7 +74,7 @@ class GridpaintActivity(activity.Activity):
 
         # Create webview
         scrolled_window = Gtk.ScrolledWindow()
-        self.webview = webview  = WebKit.WebView()
+        self.webview = webview = WebKit.WebView()
         scrolled_window.add(webview)
         webview.show()
         vbox.pack_start(scrolled_window, True, True, 0)
@@ -97,13 +86,14 @@ class GridpaintActivity(activity.Activity):
         self.enyo.connect("save-gallery", self.save_gallery)
 
         # Go to first page
-        web_app_page = os.path.join(activity.get_bundle_path(), "html/index.html")
+        web_app_page = os.path.join(
+            activity.get_bundle_path(),
+            "html/index.html")
         self.webview.load_uri('file://' + web_app_page)
 
         # Display all
         self.set_canvas(vbox)
         vbox.show()
-
 
     def make_toolbar(self):
         # toolbar with the new toolbar redesign
@@ -138,7 +128,6 @@ class GridpaintActivity(activity.Activity):
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
 
-
     def write_file(self, file_path):
         "Called when activity is saved, get the current context in Enyo"
         if self.context is None:
@@ -146,17 +135,15 @@ class GridpaintActivity(activity.Activity):
         self.file_path = file_path
         file = open(self.file_path, 'w')
         try:
-            file.write(self.context['gallery']+'\n')
-            file.write(self.context['mode']+'\n')
-            file.write(str(self.context['selected'])+'\n')
+            file.write(self.context['gallery'] + '\n')
+            file.write(self.context['mode'] + '\n')
+            file.write(str(self.context['selected']) + '\n')
         finally:
             file.close()
-
 
     def save_gallery(self, context):
         "Called by JavaScript to save the current gallery"
         self.context = context
-
 
     def read_file(self, file_path):
         "Called when activity is loaded, load the current context in the file"
@@ -166,6 +153,9 @@ class GridpaintActivity(activity.Activity):
             gallery = file.readline().strip('\n')
             mode = file.readline().strip('\n')
             selected = file.readline().strip('\n')
-            self.context = { 'gallery': gallery, 'mode': mode, 'selected': selected }
+            self.context = {
+                'gallery': gallery,
+                'mode': mode,
+                'selected': selected}
         finally:
             file.close()
