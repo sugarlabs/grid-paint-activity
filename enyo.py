@@ -25,13 +25,13 @@ class Enyo:
 
     def send_message(self, name, args=None):
         """Send a message to Enyo"""
-        script = "enyo.Sugar.sendMessage('"+name+"', "
-        if not args is None:
-            value = "'"+self.json_encode(args)+"'"
+        script = "enyo.Sugar.sendMessage('" + name + "', "
+        if args is not None:
+            value = "'" + self.json_encode(args) + "'"
         else:
             value = "null"
-        script = script+value+")"
-        logging.warning("sugar://"+name+"/"+value)
+        script = script + value + ")"
+        logging.warning("sugar://" + name + "/" + value)
         return self.webview.execute_script(script)
 
     def _message_emitted(self, widget, value, line, source):
@@ -43,21 +43,21 @@ class Enyo:
 
         # Get name
         prefixlen = len(prefix)
-        size = value[prefixlen:prefixlen+value[prefixlen:].index("/")]
-        start = prefixlen+1+len(size)
-        name = value[start:start+int(size)]
+        size = value[prefixlen:prefixlen + value[prefixlen:].index("/")]
+        start = prefixlen + 1 + len(size)
+        name = value[start:start + int(size)]
 
         # Get param
-        start = start + len(name)+1
-        size = value[start:start+value[start:].index("/")]
+        start = start + len(name) + 1
+        size = value[start:start + value[start:].index("/")]
         if int(size) == 0:
             args = None
         else:
-            start = start+1+len(size)
-            args = value[start:start+int(size)]
+            start = start + 1 + len(size)
+            args = value[start:start + int(size)]
 
         # Call handler if exist
-        logging.warning(value);
+        logging.warning(value)
         if name in self.handlers:
             callback = self.handlers[name]
             if args:
@@ -76,12 +76,14 @@ class Enyo:
             first = True
             for name in dir(obj):
                 value = getattr(obj, name)
-                if not name.startswith('__') and not inspect.ismethod(value) and not inspect.isroutine(value) and not inspect.isbuiltin(value) and not isinstance(value, obj.__class__):
-                    if not first:
-                        result = result + ', '
-                    else:
-                        first = False
-                    result = result + '"'+name+'": '
-                    result = result + self.json_encode(value)
+                if not name.startswith('__') and not inspect.ismethod(value):
+                    if not inspect.isroutine(value) and not inspect.isbuiltin(
+                            value) and not isinstance(value, obj.__class__):
+                        if not first:
+                            result = result + ', '
+                        else:
+                            first = False
+                        result = result + '"' + name + '": '
+                        result = result + self.json_encode(value)
             result = result + "}"
         return result
