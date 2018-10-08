@@ -1,6 +1,9 @@
 [Activity]
-name = Grid Paint
+name = GridpaintActivity
 activity_version = 2
-bundle_id = org.olpcfrance.Gridpaint
-exec = sugar-activity-web
+bundle_id = org.sugarlabs.GridpaintActivity
+exec = sugar-activity3 activity.GridpaintActivity
 icon = activity-icon
+licence = GPLv3+
+repository = https://github.com/sugarlabs/GridpaintActivity.git
+
