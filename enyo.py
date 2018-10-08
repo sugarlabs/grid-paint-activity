@@ -11,13 +11,13 @@ import inspect
 
 
 class Enyo:
-    """Class to handle communication with Enyo"""
+    """Class to handle communication with Enyo."""
 
     def __init__(self, webview):
         """Constructor: link to the WebKit widget"""
         self.webview = webview
         self.handlers = {}
-        self.webview.connect("console-message", self._message_emitted)
+        self.webview.connect("ready-to-show", self._message_emitted)
 
     def connect(self, name, callback):
         """Add a new handler for an event"""
@@ -25,7 +25,6 @@ class Enyo:
 
     def send_message(self, name, args=None):
         """Send a message to Enyo"""
-        script = "enyo.Sugar.sendMessage('" + name + "', "
         if args is not None:
             value = "'" + self.json_encode(args) + "'"
         else:
