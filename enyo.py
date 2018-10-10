@@ -11,7 +11,7 @@ import inspect
 
 
 class Enyo:
-    """Class to handle communication with Enyo"""
+    """Class to handle communication with Enyo."""
 
     def __init__(self, webview):
         """Constructor: link to the WebKit widget"""
@@ -25,7 +25,6 @@ class Enyo:
 
     def send_message(self, name, args=None):
         """Send a message to Enyo"""
-        script = "enyo.Sugar.sendMessage('" + name + "', "
         if args is not None:
             value = "'" + self.json_encode(args) + "'"
         else:
