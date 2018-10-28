@@ -31,11 +31,17 @@
 
 # GridPaint has been kept extremely minimal as an explicit design choice.
 # If you want to add features please make a fork with a different name.
-# Thanks in advance
+# Thanks in advance.
 
+import os
+
+import gi
+gi.require_version('Gdk', '3.0')
+gi.require_version('Gtk', '3.0')
+gi.require_version('WebKit2', '4.0')
 
 from gi.repository import Gtk
-import os
+from gi.repository import WebKit2
 
 from sugar3.activity import activity
 from sugar3.graphics.toolbarbox import ToolbarBox
@@ -44,10 +50,12 @@ from sugar3.activity.widgets import TitleEntry
 from sugar3.activity.widgets import StopButton
 from sugar3.activity.widgets import ShareButton
 from sugar3.activity.widgets import DescriptionItem
-
-from gi.repository import WebKit
-
 from enyo import Enyo
+
+
+def get_index_uri():
+    index_path = os.path.join(activity.get_bundle_path(), 'index.html')
+    return 'file://' + index_path
 
 
 class GridpaintActivity(activity.Activity):
@@ -59,7 +67,7 @@ class GridpaintActivity(activity.Activity):
 
         self.max_participants = 1
 
-        self.make_toolbar()
+        # self.make_toolbar()
         self.make_mainview()
 
         self.context = None
@@ -74,7 +82,7 @@ class GridpaintActivity(activity.Activity):
 
         # Create webview
         scrolled_window = Gtk.ScrolledWindow()
-        self.webview = webview = WebKit.WebView()
+        self.webview = webview = WebKit2.WebView()
         scrolled_window.add(webview)
         webview.show()
         vbox.pack_start(scrolled_window, True, True, 0)
@@ -86,10 +94,8 @@ class GridpaintActivity(activity.Activity):
         self.enyo.connect("save-gallery", self.save_gallery)
 
         # Go to first page
-        web_app_page = os.path.join(
-            activity.get_bundle_path(),
-            "html/index.html")
-        self.webview.load_uri('file://' + web_app_page)
+
+        self.webview.load_uri(get_index_uri())
 
         # Display all
         self.set_canvas(vbox)
